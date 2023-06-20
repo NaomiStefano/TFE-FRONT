@@ -1,0 +1,32 @@
+<app-my-title text="Liste des exercices" [buttons]="button"></app-my-title>
+
+<div class="mt-5">
+    <div class="d-flex justify-content-start mb-3">
+        <p-dropdown *ngIf="!isLoading || selectedCoach!=null" 
+            [options]="coaches" 
+            optionLabel="login" optionValue="id" 
+            [(ngModel)]="selectedCoach"
+            placeholder="Filtrer par coach..."
+            [showClear]="true"
+            (onChange)="getExercises($event)"
+            (onClear)="getExercises()">
+        </p-dropdown>
+      </div>
+
+    <app-my-table 
+    [data]="exercises"
+    [columns]="columns"
+    [loading]="isLoading"
+    [menuItems]="menuItem"
+    (selectedElement)="handleSelectedElement($event)"
+  ></app-my-table>
+    <div class="row" *ngIf="!isLoading && exercises.length == 0">
+        <div class="col-md-12 mt-3">
+            <div class="alert alert-primary d-flex align-items-center justify-content-between">
+                Aucun exercice enregistré pour l'instant.
+            </div>
+        </div>
+    </div>
+    <p-toast position="bottom-right"></p-toast>
+    <p-confirmDialog header="Confirmation de suppression" acceptLabel="Confirmer" rejectLabel="Annuler"></p-confirmDialog>
+</div>

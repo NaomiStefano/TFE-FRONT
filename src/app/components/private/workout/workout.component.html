@@ -1,0 +1,115 @@
+<section *ngIf="workoutsMode else workoutMode">
+
+    <app-my-title text="Liste des entrainements" [buttons]="button"></app-my-title>
+    
+    <div class="mt-5">
+        <div class="d-flex justify-content-start mb-3">
+            <p-dropdown *ngIf="!isLoading " 
+                        [options]="coaches" 
+                        [(ngModel)]="selectedCoach"
+                        optionLabel="fullName" optionValue="id" 
+                        placeholder="Filtrer par coach..."
+                        [showClear]="true"
+                        (onChange)="getWorkouts($event)"
+                        (onClear)="getWorkouts()">
+    
+            </p-dropdown>
+        </div>
+        <app-my-table 
+            [data]="workouts" 
+            [columns]="columns" 
+            [loading]="isLoading"
+            [menuItems]="menuItem"
+            (selectedElement)="handleSelectedElement($event)"
+        ></app-my-table>
+        <p-toast position="bottom-right"></p-toast>
+        <p-confirmDialog header="Confirmation de suppression" acceptLabel="Confirmer" rejectLabel="Annuler"></p-confirmDialog>
+        <div class="row" *ngIf="!isLoading && workouts.length == 0">
+            <div class="col-md-12 mt-3">
+                <div class="alert alert-primary d-flex align-items-center justify-content-between">
+                    Aucune séance enregistrée pour l'instant.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<ng-template #workoutMode>
+    <app-my-title [text]="updateMode ? 'Modification d\'un entrainement'  : 'Création d\'un entrainement'"
+    [showReturn]="true"
+    (iconClick)="goBackToList()"
+    [buttons]="creationButton">
+</app-my-title>
+<div class="mt-5">
+        <div class=" row">
+            <div class="col-3">
+                <h3 class="fw-bold  text-start">Nom de l'entrainement :</h3>
+            </div>
+            <div class="col-9">
+                <input pInputText [(ngModel)]="workoutTitle" required />
+            </div>
+        </div>
+    </div>
+    <div class="mt-5"> 
+        <p-tabView class="h-50" (onChange)="onTabChange($event)" (activeIndexChange)="onActiveIndexChange($event)">
+            <ng-container *ngFor="let type of types">
+              <p-tabPanel [header]="type.title">
+                <ng-container *ngFor="let workoutExercise of workoutExercises">
+                  <div class="row my-4" *ngIf="workoutExercise.typeId === type.id">
+                    <div class="col-12" *ngFor="let exercise of workoutExercise.exercises">
+                        <div class="row my-3">
+                            <div class="col-2">
+                              <i class="fas fa-minus-square fa-xl" (click)="removeExerciseFromWorkout(selectedCategory, exercise.id)"></i>
+                            </div>
+                            <div class="col-3">
+                              <span>{{ exercise.title }}</span>
+                            </div>
+                            <div class="col-1">
+                                <i class="fas fa-info-circle " [pTooltip]="exercise.description ? exercise.description : 'Aucune description supplémentaire...'" [tooltipOptions]="tooltipOptions"></i>
+                            </div>
+                          </div>                          
+                    </div>
+                  </div>
+                </ng-container>
+              </p-tabPanel>
+            </ng-container>
+          </p-tabView>
+          
+      </div>
+    <div class="d-flex justify-content-center align-items-end mt-5">
+        <div class="col-10">
+          <p-button label="Ajouter un exercice" class="row mx-2 my-2" (onClick)="showExerciseSideBar=true" (onHide)="showExerciseSideBar=false"></p-button>
+        </div>
+      </div>
+      
+    <p-sidebar [(visible)]="showExerciseSideBar" position="right" styleClass="sidebar">
+        <h2 class="fw-bold text-start">Ajouter un exercice</h2>
+        <div class="row">
+            <div class="col-3">
+                <h3 class="fw-bold text-start">Type d'exercice : </h3>
+            </div>
+            <div class="col-9">
+                <p-dropdown *ngIf="!isLoading " 
+                    [options]="types" 
+                    [(ngModel)]="selectedType"
+                    optionLabel="title" optionValue="id" 
+                    placeholder="Filtrer par type..."
+                    [showClear]="true"
+                    (onChange)="getAllExercises($event)"
+                    (onClear)="getAllExercises()">
+                </p-dropdown>    
+            </div>
+            <ng-container *ngFor="let exercise of exercises">
+                <div class="row text-start my-4">
+                    <div class="col-2 ">
+                        <i class="fas fa-square-plus fa-xl ml-4" (click)="addExerciseToWorkout(selectedCategory,exercise)"></i>
+                    </div>
+                    <div class="col-10">
+                        <span>{{exercise.title}}</span>
+                    </div>
+                </div>
+                <hr>
+            </ng-container>
+        </div>
+    </p-sidebar>
+  </ng-template>
+  <p-toast position="bottom-right"></p-toast>

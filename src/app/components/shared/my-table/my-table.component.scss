@@ -1,0 +1,10 @@
+:host ::ng-deep .p-datatable .p-datatable-thead>tr>th {
+    padding: 1.2rem !important;
+    border: 0.5px solid var(--grey) !important;
+    border-width: 0 0 0.5px 0  !important ;
+    font-weight: 600 !important;
+    color: var(--grey-darker)  !important;
+    background: var(--white) !important;
+    transition: box-shadow .2s;
+}
+

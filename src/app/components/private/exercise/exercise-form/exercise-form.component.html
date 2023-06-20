@@ -1,0 +1,39 @@
+<section class="m-3">
+    <div [formGroup]="exerciseForm">
+        <div class="row mt-2 w-100" >
+            <div class="col-12 d-flex align-items-center justify-content-start">
+                <div class="row">
+                    <h3 class="fw-bold" >Nom * : </h3>
+                    <input type="text" pInputText formControlName="title" class="w-100"/>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2 w-100">
+            <div class="col-12 d-flex align-items-center justify-content-start">
+                <div class="row ">
+                    <h3 class="fw-bold">Type(s) *:</h3> 
+                    <p-multiSelect [options]="types" formControlName="exerciseTypeIds" [filter]="false" defaultLabel="Sélectionner un ou plusieurs types..." optionLabel="title" optionValue="id" display="chip" [dropdownIcon]="loading ? 'pi pi-spinner pi-spin' : 'pi pi-chevron-down'" clas="w-100"></p-multiSelect>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2 w-100">
+            <div class="col-12 d-flex align-items-center justify-content-start">
+                <div class="row  w-100">
+                    <h3 class="fw-bold" >Lien vers la vidéo : </h3>
+                    <input type="text" pInputText formControlName="url"/>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2 w-100">
+            <div class="col-12 d-flex align-items-center justify-content-start">
+                <div class="row">
+                    <h3 class="fw-bold" >Description par défaut: </h3>
+                    <textarea rows="5" cols="50" pInputTextarea formControlName="description"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="mt-5 ">
+            <p-button [disabled]="exerciseForm.invalid" [label]="updateMode ? 'Modifier l\'exercise':'Créer l\'exercice'" class="row mx-2 my-2" (click)="exerciseForm.valid ? ref.close(exerciseForm.value) : null "></p-button>
+        </div>
+    </div>
+</section>

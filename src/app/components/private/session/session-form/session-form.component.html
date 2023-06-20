@@ -1,0 +1,49 @@
+<section class="m-3">
+    <form [formGroup]="timeslotForm">
+        <div class="row mt-2">
+            <div class="col-12 d-flex align-items-center justify-content-start">
+                <h3 class="fw-bold" >Date et heure de début : </h3>
+            </div>
+              <div class="col-12 d-flex align-items-center justify-content-center">
+                <p-calendar formControlName="startingDateTime"[showIcon]="true" [showTime]="true" [defaultDate]="updateMode? timeslotForm.value.startingDateTime : defaultDate" [minDate]="todayDate" [hideOnDateTimeSelect]="false" dateFormat="dd/mm/yy" appendTo="body" [stepMinute]="15" [required]="true" (onSelect)="setDate()"></p-calendar>
+            </div>
+            <div *ngIf="timeslotForm.get('startingDateTime')?.invalid && timeslotForm.get('startingDateTime')?.touched" class="error-message">
+                Veuillez encoder une date et une heure future. 
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12 d-flex align-items-center justify-content-start">
+                <h3 class="fw-bold">Heure de fin de la séance :</h3>
+            </div>
+              <div class="col-12 d-flex align-items-center justify-content-center">
+                <p-calendar formControlName="endDateTime"[showIcon]="true" [showTime]="true"  [minDate]="timeslotForm.value.startingDateTime" [hideOnDateTimeSelect]="false" dateFormat="dd/mm/yy" appendTo="body" [stepMinute]="15" [required]="true" ></p-calendar>
+            </div>
+        </div>
+        <div class="row mt-4 mb-4">
+            <div class="col-12 d-flex align-items-center justify-content-start">
+              <h3 class="fw-bold">Type de séance :</h3>
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <div class="col-10 d-flex align-items-center justify-content-between">
+                    <div *ngFor="let type of types" class="field-checkbox">
+                      <p-radioButton [inputId]="type.label" [value]="type.value" formControlName="isCollective" [required]="true"></p-radioButton>
+                      <label [for]="type.value" class="label-radio">{{ type.label }}</label>
+                    </div>
+                  </div>              
+            </div>
+        </div>         
+        <div class="row align-items-center justify-content-start mt-4">
+            <div class="col-8 d-flex align-items-center">
+              <div class="d-flex align-items-center">
+                <h3 class="fw-bold ">Nombre maximum de participants:</h3>
+              </div>
+            </div>
+            <div class="col-4 d-flex align-items-center justify-content-center">
+              <p-inputNumber formControlName="maxParticipants" mode="decimal" [min]="1" [max]="200" class="w-75" [required]="true"></p-inputNumber>
+            </div>
+          </div>                    
+        <div class="mt-5">
+            <p-button [disabled]="timeslotForm.invalid" [label]="updateMode ? 'Modifier la séances' : 'Ajouter la disponibilité'" class="row mx-2 my-2" (click)="timeslotForm.valid ? ref.close(timeslotForm.value):null" ></p-button>
+        </div>
+    </form>  
+</section>

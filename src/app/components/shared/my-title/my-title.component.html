@@ -1,0 +1,22 @@
+<div class="w-100 super-compos-sectionseparator-horizontal pl-0 pr-0 header-container d-flex align-items-center justify-content-between">
+    <div class="texts__container">
+        <div class="d-flex align-items-center justify-content-center" >
+            <span *ngIf="showReturn" (click)="onIconClick()">
+                <i class="fas fa-circle-arrow-left title_icon" ></i>
+            </span>
+            <div class="text_title">
+                <h1 class="super-compos-titre-h1 border-0 m-0">
+                    {{text}}
+                </h1>
+            </div>
+        </div>
+    </div>
+    
+    <ng-container *ngIf="buttons && buttons.length > 0">
+        <div class="buttons__container">
+            <div *ngFor="let button of buttons">
+                <p-button *ngIf="button" label="{{button?.text}}" class="row mx-2 my-2" (onClick)="button?.click()"></p-button>
+            </div>
+        </div>
+    </ng-container>
+</div>

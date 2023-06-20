@@ -1,0 +1,12 @@
+.label-radio {
+    padding-left : 15px !important;
+}	
+
+:host ::ng-deep .p-calendar{
+    width:25vw;
+}
+
+:host ::ng-deep .p-datepicker-trigger {
+    width:5vw;
+    border-radius: 0 16px 16px 0 !important;
+}

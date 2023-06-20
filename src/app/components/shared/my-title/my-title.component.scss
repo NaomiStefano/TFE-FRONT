@@ -1,0 +1,51 @@
+
+@import '/src/app/scss/globalStyle.scss';
+
+
+@media (max-width: 576px) { 
+    .super-compos-titre-h1{
+        font-size: 15px !important;
+    }
+}
+.buttons{
+    &__container{
+         display: flex;
+         align-items: center;
+         letter-spacing: 1.5px;
+         & :not(:last-child){
+              margin-right: 1rem;
+         }
+    }
+}
+
+
+/* ---------------------------------------- */
+
+
+/* TITRES */
+.super-compos-titre{
+   display: flex;
+   align-items: center;
+}
+.super-compos-titre-h1 {
+    padding-top: 25px;
+    color: var(--grey-dark);
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding-bottom: 15px;;
+}
+
+.super-compos-sectionseparator-horizontal {
+    border-bottom: 1px solid var(--grey-darker) !important;
+}
+
+fa-icon{
+    margin-right: 25px;
+}
+
+.title_icon{
+    color: var(--grey-dark); 
+    font-size: 18px;
+    margin-right: 20px;
+}

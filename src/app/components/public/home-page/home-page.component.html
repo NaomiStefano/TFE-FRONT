@@ -1,0 +1,38 @@
+<div class="d-flex flex-column justify-content-center vh-100 parent">
+    <div class="container_box text-center align-self-center d-flex flex-column justify-content-between">
+        <section>
+            <img src="assets/img/png/staminaWhite.png" class="container_headTitle mt-4">
+            <h1 class="text-white">ZONE COACH</h1>
+        </section>
+        <section class="mt-5 w-100 align-self-center">
+            <form [formGroup]="loginForm">
+                <div class="row mx-3">
+                    <div class="col-12 ">
+                        <span class="p-float-label">
+                            <input pInputText id="login" class="w-100 " formControlName="login" />
+                            <label htmlFor="login">Identifiant</label>
+                        </span>
+                    </div>
+                </div>
+                <div class="row mx-3 mt-5">
+                    <div class="col-12">
+                        <span class="p-float-label ">
+                            <p-password type="password"  formControlName="password" class="w-full" [feedback]="false"                                 
+                            styleClass="p-password p-component p-inputwrapper p-input-icon-right" [style]="{'width':'100%'}"
+                                [inputStyle]="{'width':'100%'}" [toggleMask]="true">
+                            </p-password>
+                            <label for="password">Mot de passe</label>
+                        </span>
+                    </div>
+                </div>  
+            </form>
+        </section>
+        <section class="row mx-2 mt-5 mb-4">
+            <div class="col-12">
+                <p-button [disabled]="loginForm.invalid" label="CONNEXION" class="row mx-2 my-2" (click)="loginForm.valid ? checkLogin() : null"></p-button>
+                <p-button label="INSCRIPTION" class="row mx-2 mt-4"  routerLink="/public/signup" routerLinkActive="active"></p-button>
+            </div>
+        </section>
+        <p-toast position="bottom-right"></p-toast>
+    </div>
+</div>

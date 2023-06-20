@@ -1,0 +1,114 @@
+:root {
+    --grey-darker: #06080E;
+    --grey-dark: #121420;
+    --grey : #2C2C3C;
+    --light-grey : #e1e1e1;
+    --white: #F8F9FA;
+}
+
+// GENERAL FONT 
+
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap');
+.body,
+.p-component {
+    font-family: "Source Sans Pro", sans-serif;
+}
+
+
+
+
+.container{
+    
+    &_headTitle{
+        width:80%;
+    }
+
+    &_box{
+        background-color: var(---grey-dark) ;
+        border-radius: 25px ;
+    }
+}
+
+.p-inputtext{
+    border-radius: 10px ;
+    padding: 0.7rem;
+    width:100%;
+}
+
+.p-button{
+    border-radius: 10px !important ;
+    border : none;
+    background: var(--grey) !important;
+}
+
+fa-icon {
+    cursor: pointer;
+  }
+
+.no-cursor {
+    cursor: default !important;
+}
+
+
+.fa-check-circle:before, .fa-circle-check:before {
+    content: "\f058";
+    color: green ;
+}
+
+fa-close:before, .fa-multiply:before, .fa-remove:before, .fa-times:before, .fa-xmark:before {
+    content: "\f00d";
+    color : red ;
+}
+
+::-webkit-scrollbar-track {
+    /*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);*/
+    background-color: #f2f2f2;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    /*background-color: #555;*/
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #555;
+    /*border: 0px solid #555555;*/
+}
+
+.scrollbar {
+    overflow-y: auto;
+    height: 95vh;
+    overflow-x: hidden;
+}
+
+
+.ngx-toastr.toast-success {
+    background-color: var(--grey) !important;
+}
+
+
+
+.p-dropdown .p-dropdown-clear-icon {
+    font-size: 1em !important;
+}
+
+input.ng-touched.ng-invalid,
+input.ng-dirty.ng-invalid {
+    border: 1.5px solid #ff6260 !important;
+}
+
+ .p-multiselect.p-multiselect-chip .p-multiselect-token {
+    color : var(--white) !important;
+    background-color : var(--grey) !important;
+    margin-right: 10px !important;
+}
+
+.error-message{
+    color:  #ff6260 ;
+    font-size: 14px;
+    margin-top: 5px;   
+}
+
+.fw-boldish{
+    font-weight : 500 !important;
+}

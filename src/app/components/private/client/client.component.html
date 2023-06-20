@@ -1,0 +1,155 @@
+
+<div *ngIf="clientsMode ; else userMode">
+    <app-my-title text="Liste des coachés" ></app-my-title>
+    <div class="mt-5">
+        <app-my-table 
+            [data]="clients" 
+            [columns]="columns" 
+            [loading]="isLoading"
+            [menuItems]="menuItem"
+            (selectedElement)="handleSelectedElement($event)"
+            ></app-my-table>
+            <p-toast position="bottom-right"></p-toast>
+            <p-confirmDialog header="Confirmation de suppression" acceptLabel="Confirmer" rejectLabel="Annuler"></p-confirmDialog>
+        <div class="row" *ngIf="!isLoading && clients.length == 0">
+            <div class="col-md-12 mt-3">
+                <div class="alert alert-primary d-flex align-items-center justify-content-between">
+                    Aucun client enregistré pour l'instant.
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<ng-template #userMode>
+    <app-my-title [text]="selectedClient.fullName" [showReturn]="true" (iconClick)="backToList()" [buttons]="buttons"></app-my-title>
+    <section class="profile-section">
+        <div class="row mt-4">
+            <div class="col-12">
+                <h3 class="fw-bold text-start">INFORMATIONS PERSONNELLES</h3>
+            </div>
+        </div>
+        <div class="row"> 
+            <div class="ml-4"> 
+                <div class="row text-start my-2">
+                    <div class="col-1 ">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="col-11">
+                        <span>{{selectedClient.fullName}}</span>
+                    </div>
+                </div>
+                <div class="row text-start my-2">
+                    <div class="col-1 ">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="col-11">
+                        <span>{{selectedClient.phoneNumber}}</span>
+                    </div>
+                </div>
+                <div class="row text-start my-2">
+                    <div class="col-1 ">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="col-11">
+                        <span>{{selectedClient.birthDate | date:'dd/MM/yyyy' }}</span>
+                    </div>
+                </div>
+                <div class="row text-start my-2">
+                    <div class="col-1 ">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="col-11">
+                        <span>{{selectedClient.maritalStatus ? selectedClient.maritalStatus : 'Non défini '}}</span>
+                    </div>
+                </div>
+                <div class="row text-start my-2">
+                    <div class="col-1 ">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <div class="col-11">
+                        <span>{{ selectedClient.hasKids !== undefined ? (selectedClient.hasKids ? 'Oui' : 'Pas d\'enfant') : 'Non défini' }}</span>
+                    </div>
+                </div>
+                <div class="row text-start my-2">
+                    <div class="col-1">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <div class="col-11">
+                        <span>{{selectedClient.physicalActivity  ? selectedClient.physicalActivity : 'Non défini '}}</span>
+                    </div>
+                </div>
+                <div class="row text-start my-2">
+                    <div class="col-1 ">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="col-11">
+                        <span>{{selectedClient.profession ? selectedClient.profession : 'Non défini '}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+   <section *ngIf="selectedClient.hasDistancial" class="mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h3 class="fw-bold  text-start">   ANTECEDENTS MEDICAUX  </h3> 
+        </div>
+    </div>
+    <div class="col-12 text-start mt-2">
+        <span>{{selectedClient.medicalHistory ? selectedClient.medicalHistory : 'Pas d\'information ... '}}</span>
+    </div>
+   </section >
+   <section *ngIf="selectedClient.hasDistancial" class="mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h3 class="fw-bold text-start">PERFORMANCE INITIALE - {{ selectedClient.createdAt | date:'dd/MM/yyyy' }}</h3>
+            </div>
+            <div class="row">
+                    <div class="col-3">
+                        <h4 class="fw-boldish"> Max MU</h4>
+                        {{selectedClient.initialMu}}
+                    </div>
+                    <div class="col-3">
+                        <h4 class="fw-boldish"> Max PU</h4>
+                        {{selectedClient.initialPu}}
+                    </div>
+                    <div class="col-3">
+                        <h4 class="fw-boldish"> Max Dips</h4>
+                        {{selectedClient.initialDips}}
+                    </div>
+                    <div class="col-3">
+                        <h4 class="fw-boldish"> Max squat</h4>
+                        {{selectedClient.initialSquat}}
+                    </div>
+            </div>
+        </div>
+    </section>
+    
+        <!-- This part is just on a vision end, i need to update the backend and create a property to define 
+        the day the new max's have been calculated and display them. In the meanTime i let it like that because is not required yet -->
+        <section *ngIf="selectedClient.hasDistancial && selectedClient.updatedAt !== null " class="mt-4">
+            <div class="col-12">
+                <h3 class="fw-bold  text-start">  DERNIERER MAXIMUM ENREGISTRE -   {{ selectedClient.updatedAt | date:'dd/MM/yyyy' }}</h3> 
+            </div>
+        <div class="row">
+            <div class="col-3">
+                <h4 class="fw-boldish"> Max MU</h4>
+                {{selectedClient.maxMu ? selectedClient.maxMu : 'Pas encore défini'}}
+            </div>
+            <div class="col-3">
+                <h4 class="fw-boldish"> Max PU</h4>
+                {{selectedClient.maxPu ? selectedClient.maxPu : 'Pas encore défini'}}
+            </div>
+            <div class="col-3">
+                <h4 class="fw-boldish"> Max Dips</h4>
+                {{selectedClient.maxDips ? selectedClient.maxDips : 'Pas encore défini'}}
+            </div>
+            <div class="col-3">
+                <h4 class="fw-boldish"> Max squat</h4>
+                {{selectedClient.maxSquat ? selectedClient.maxSquat : 'Pas encore défini'}}
+            </div>
+        </div>
+    </section> 
+</ng-template>

@@ -1,0 +1,16 @@
+.ui-sidebar {
+    width: 28vw !important;
+  }
+
+hr 
+{
+    width: 90%;
+    margin: 0 auto;
+    border: none;
+    border-top: 2px solid var(--grey-dark);  
+}
+
+ ::ng-deep p-tabview > div > div.p-tabview-panels{
+    height : 50vh !important;
+}
+

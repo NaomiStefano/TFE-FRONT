@@ -1,0 +1,38 @@
+<section class="backgroundMenu h-100">
+  <div class="container-fluid h-100">
+    <div class="row h-100">
+      <div class="col-md-3 col-lg-2 h-100 sidebar_container">
+        <i class="material-icons grey-icon mt-3 ml-5" [pTooltip]="'Se déconnecter...'" [tooltipPosition]="'right'" (click)="dataService.disconnect()">exit_to_app</i>
+        <div class="my-3">
+          <div class="d-flex flex-column justify-content-center align-items-end text-center my-4 mx-5 ">
+            <i class="material-icons grey-icon" routerLink="/private/myProfile">edit</i>
+          </div>
+          <div class="d-flex flex-column justify-content-center align-items-center text-white text-center my-2">
+            <i class="material-icons user-icon" (click)="updateCoach()">account_circle</i>
+            <h2 class="mb-0 mt-4">{{dataService.fullName}}</h2>
+            <h3 class="pt-0">{{dataService.type}}</h3>
+          </div>
+        </div>
+        <div #navigation class="d-flex flex-column justify-content-center align-items-center">
+          <ul class="nav flex-column w-100">
+            <li class="nav-item p-2">
+              <a class="nav-link fw-bolder text-white" routerLink="/private/session" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Séances</a>
+            </li>
+            <li class="nav-item p-2">
+              <a class="nav-link fw-bolder text-white" routerLink="/private/client" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Coachés</a>
+            </li>
+            <li class="nav-item p-2">
+              <a class="nav-link fw-bolder text-white" routerLink="/private/exercise" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Exercices</a>
+            </li>
+            <li class="nav-item p-2">
+              <a class="nav-link fw-bolder text-white" routerLink="/private/workout" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Entrainements</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class=" w-75 h-100 overflow-auto mx-auto text-center">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</section>

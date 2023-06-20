@@ -1,0 +1,76 @@
+<div class="d-flex flex-column justify-content-center vh-100 parent">
+    <div class="container_box text-center align-self-center d-flex flex-column justify-content-between">
+        <section class=" w-100 align-self-center">
+            <section>
+                <img src="assets/img/png/staminaWhite.png" class="container_headTitle mt-2">
+                <h1 class="text-white">ZONE COACH</h1>
+            </section>
+            <form [formGroup]="signupForm">
+                <div class="row mx-3 ">
+                    <div class="col-12 ">
+                        <input pInputText id="lastName" class="w-100 " formControlName="lastName" placeholder="Nom"/>
+                    </div>
+                </div><div class="row mx-3  mt-3">
+                    <div class="col-12 ">
+                        <input pInputText id="firstName" class="w-100 " formControlName="firstName" placeholder="Prénom"/>
+                    </div>
+                </div>
+                <div class="row mx-3 mt-3">
+                    <div class="col-12 ">
+                        <input pInputText id="login" class="w-100 " formControlName="login" placeholder="Identifiant" />
+                    </div>
+                </div>
+                <div class="row mx-3  mt-3">
+                    <div class="col-12 ">
+                            <p-inputMask formControlName="birthDate"  mask="99/99/9999" slotChar="jj/mm/aaaa" placeholder="Date de naissance" ></p-inputMask>
+                    </div>
+                </div>
+                <div class="row mx-3 mt-3">
+                    <div class="col-12 ">
+                            <p-inputMask mask="0999/99.99.99" formControlName="phoneNumber" placeholder="Numéro de téléphone" ></p-inputMask>
+                    </div>
+                </div>
+                <div class="row mx-3 mt-3">
+                    <div class="col-12">
+                        <p-password type="password"  formControlName="password" class="w-full"                                 
+                            styleClass="p-password p-component p-inputwrapper p-input-icon-right" [style]="{'width':'100%'}"
+                            [inputStyle]="{'width':'100%'}" [toggleMask]="true" placeholder="Mot de passe"
+                            strongRegex="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$" strongLabel="Format requis atteint !" mediumLabel=" " weakLabel=" " promptLabel=" ">
+                            <ng-template pTemplate="footer">
+                                <ul class="pl-2 mt-0" style="line-height: 1.5">
+                                    <li>Au moins 1 lettre majuscule</li>
+                                    <li>Au moins 1 lettre minuscule</li>
+                                    <li>Au moins 1 nombre</li>
+                                    <li>Au moins 1 caractère spécial</li>
+                                    <li>Minimum 8 caractères</li>
+                                </ul>
+                            </ng-template>
+                        </p-password>
+                    </div>
+                </div>  
+                <div class="row mx-3 mt-3">
+                    <div class="col-12">
+                        <p-password type="password"  formControlName="confirmPass" class="w-full" [feedback]="false"                                 
+                        styleClass="p-password p-component p-inputwrapper p-input-icon-right" [style]="{'width':'100%'}"
+                            [inputStyle]="{'width':'100%'}" [toggleMask]="true" placeholder="Répéter le mot de passe"
+                            required (onFocus)="checkPasswordMatch()"> 
+                        </p-password>
+                    </div>
+                </div>  
+                 <div class="row mx-3 mt-3">
+                    <div class="col-12">
+                        <p-checkbox formControlName="needAccessGym" [binary]="true" inputId="gymButton"></p-checkbox>
+                        <label class="text-white ml-2" for="gymButton">Je souhaite un accès à la salle de sport.</label>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <p-toast position="bottom-right"></p-toast>
+        <section class="row mx-2 mt-4 mb-4">
+            <div class="col-12">
+                <p-button label="S'INSCRIRE" [disabled]="signupForm.invalid" class="row mx-2 my-2" (click)="signupForm.valid ? signup() : null "></p-button>
+                <p-button label="RETOUR"   routerLink="/public/home" routerLinkActive="active" class="row mx-2 mt-4"></p-button>
+            </div>
+        </section>
+    </div>
+</div>
