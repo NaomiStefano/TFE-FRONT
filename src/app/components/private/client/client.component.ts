@@ -6,6 +6,8 @@ import { MyColumn } from '../../shared/my-table/myColumn';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
 import { MyButton } from 'src/app/models/button';
+import { DialogService } from 'primeng/dynamicdialog';
+import { SignupPageComponent } from '../../public/signup-page/signup-page.component';
 
 @Component({
   selector: 'app-client',
@@ -51,10 +53,10 @@ export class ClientComponent {
       text : 'Supprimer le coaché',
       click:() => this.deleteClient(this.selectedClient)
     },
-    {
-      text : '  Programmations  ',
-      click:() => alert("prooogra")
-    }
+    // {
+    //   text : '  Programmations  ',
+    //   click:() => alert("prooogra")
+    // }
     
   ];
   public menuItem : MenuItem[] = [  
@@ -74,6 +76,7 @@ export class ClientComponent {
     private api : ApiCallService,
     private datePipe: DatePipe,
     private confirmationService: ConfirmationService,
+    private dialogService : DialogService,
     private messageService: MessageService,
   ){
 
@@ -106,14 +109,19 @@ export class ClientComponent {
 
   private getClientDetails(client:Client){
     this.clientsMode = false;
-    client.hasDistancial == false ? this.buttons.splice(1,1):null;
+    // client.hasDistancial == false ? this.buttons.splice(1,1):null;
   }
   /**
    * Update a client
    */
 
-  private updateClient(client:Client){
-
+  public updateClientGeneral(client:Client){
+    localStorage.setItem('profile','true');
+    localStorage.setItem('client',JSON.stringify(client))
+    this.dialogService.open(SignupPageComponent,{
+      header:"Modifier le profil du coaché ",
+      width: "40%"
+    }) 
   }
 
   /**
@@ -136,6 +144,7 @@ export class ClientComponent {
   
   
   handleSelectedElement(event: Client) {
+    console.log(event)
     this.selectedClient = event;
     
   }
@@ -148,10 +157,10 @@ export class ClientComponent {
         text : 'Supprimer le coaché',
         click:() => this.deleteClient(this.selectedClient)
       },
-      {
-        text : '  Programmations  ',
-        click:() => alert("prooogra")
-      }
+      // {
+      //   text : '  Programmations  ',
+      //   click:() => alert("prooogra")
+      // }
       
     ];
   }

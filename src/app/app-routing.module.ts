@@ -8,7 +8,6 @@ import { SessionComponent } from './components/private/session/session.component
 import { ClientComponent } from './components/private/client/client.component';
 import { ExerciseComponent } from './components/private/exercise/exercise.component';
 import { WorkoutComponent } from './components/private/workout/workout.component';
-import { ProfileComponent } from './components/private/profile/profile.component';
 import { authGuard } from './services/AuthGuard.service';
 
 const routes: Routes = [
@@ -46,16 +45,10 @@ const routes: Routes = [
       {
         path:'workout',
         component:WorkoutComponent
-      },
-      {
-        path:'myProfile',
-        component: ProfileComponent
       }
     ]
   },
-  {
-    path:'',
-    redirectTo:'/public/home'
+  { path: '', redirectTo: '/public/home', pathMatch: 'full' 
   },
 ];
 @NgModule({

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { MyButton } from 'src/app/models/button';
 import { MyColumn } from '../../shared/my-table/myColumn';
 import { ApiCallService } from 'src/app/services/api-call.service';
@@ -25,6 +25,7 @@ export class ExerciseComponent {
   ];
   public exercises : Array<Exercise> = [];
   public isLoading : boolean = true; 
+  public isModalOpen: boolean = false;
   public columns : Array<MyColumn> = [
     {
       field:"title",
@@ -55,11 +56,11 @@ export class ExerciseComponent {
     }
   ]
   public menuItem : MenuItem[] = [  
-    // { 
-    //   label: 'Voir les détails...',  // LATER
-    //   icon: 'pi pi-fw pi-search', 
-    //   command: () => alert("voir") 
-    // },
+    { 
+      label: 'Voir les détails...',  // LATER
+      icon: 'pi pi-fw pi-search', 
+      command: () => this.seeExercise(this.selectedExercise) 
+    },
     { 
       label: 'Modifier...', 
       icon: 'pi pi-fw pi-pencil', 
@@ -72,36 +73,59 @@ export class ExerciseComponent {
   public selectedExercise !: Exercise ;
   public coaches : Array<Coach> = [];
   public selectedCoach! : Coach;
+  public result: any = {};
+  public previousPageNumber !: number;
+   
   constructor(
     private api : ApiCallService,
     public dataService : StaminaService,
     private dialogService: DialogService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private cdr: ChangeDetectorRef
+
 
   ){
 
   }
 
   ngOnInit(): void {
+    this.result.pageSize=2;
+    this.result.pageNumber=1;
+    this.result.totalCount = 0;
     this.getCoaches();
     this.getExercises();
   }
 
-  /**
-   * Get all the exercises
-   */
-  public getExercises(coach?:any){
-    this.exercises = [];
-    this.isLoading = true ; 
-    this.api.getAllExercises(coach && coach.value ? coach.value  : null,null ).subscribe(
-      (res:any)=>{
-        if(res){
-          this.exercises = res; 
-        }
-        this.isLoading = false;
-    })
+  onLazyLoad(event: any) {
+      this.result.pageNumber = event;
+      this.getExercises(this.selectedCoach ? this.selectedCoach : null);
+    
   }
+  
+  public getExercises(coach?: any) {
+    
+    if (this.result.pageNumber !== this.previousPageNumber || coach) {
+      this.exercises = []; 
+      this.isLoading = true;
+
+            this.api.getAllExercises(coach && coach.value ? coach.value : null,null,this.result.pageSize,this.result.pageNumber)
+              .subscribe((res: any) => {
+                if (res) {
+                  console.log(res);
+                  this.exercises = res.results;
+                  this.result.pageSize = res.pageSize;
+                  this.result.pageNumber = res.pageNumber;
+                  this.previousPageNumber = this.result.pageNumber;
+                  this.result.totalCount = res.totalCount;
+                }
+                this.isLoading = false;
+                this.cdr.detectChanges();              
+              });
+        
+    }
+  }
+  
   /**
    * Get all coaches for the dropdown
    */
@@ -122,16 +146,25 @@ export class ExerciseComponent {
       width: "40%"
     })
     dialog.onClose.subscribe(
-      (value)=>{
-        if(value){
+      (value: any) => {
+        if (value) {
           this.api.postExercise(value)
-            .subscribe((res:any)=>{
-              this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Création réussie !' });
-              this.getExercises();
-          })
+            .subscribe({
+              next: (res: any) => {
+                this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Création réussie !' });
+                this.getExercises();
+              },
+              error: (error: any) => {
+                const notunique = error.error.toString().trim() === 'UniqueTitle';
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Erreur',
+                  detail: notunique ? 'Un exercice à ce nom existe déjà' : 'Une erreur est survenue...'
+                });
+              }
+            });
         }
-      }
-    )
+      })   
   }
 
   /**
@@ -143,7 +176,10 @@ export class ExerciseComponent {
     const dialog = this.dialogService.open(ExerciseFormComponent,{
       header:"Modifier un exercice",
       width: "40%",
-      data:exercise
+      data:{
+        exercise: exercise,
+        read:false
+      }
     })
     dialog.onClose.subscribe(
       (value)=>{
@@ -158,23 +194,53 @@ export class ExerciseComponent {
       }
     )
   }
+
+  /**
+   * See exercise details
+   */
+  private seeExercise(exercise:Exercise){
+     this.dialogService.open(ExerciseFormComponent,{
+      header:'Consulter détails de l\'exercice ' + exercise.title,
+      width: "40%",
+      data:{
+       exercise: exercise,
+       read: true
+      }
+    })
+    
+  }
+
   /**
    * Delete an exercise
    * @param exercise Exercise to delete
    */
-  private deleteExercise(exercise:Exercise){
-    this.confirmationService.confirm({
-      message: `Êtes-vous sûr de vouloir supprimer l\'exercice " ${exercise.title} " ?`,
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-
-        this.api.deleteExercise(exercise.id).subscribe((res)=>{
-          console.log(res)
-          this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Suppression réussie !' });
-        })
-      }
-  });
+  private deleteExercise(exercise: Exercise) {
+    if(this.isModalOpen==false){
+      this.isModalOpen = true;
+      this.confirmationService.confirm({
+        message: `Êtes-vous sûr de vouloir supprimer l'exercice "${exercise.title}" ?`,
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          this.api.deleteExercise(exercise.id)
+            .subscribe({
+              next: (res: any) => {
+                console.log(res);
+                this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Suppression réussie !' });
+                this.isModalOpen=false;
+              },
+              error: (error: any) => {
+                this.isModalOpen=false;
+                const isUsed = error.error.toString().trim() === 'ExerciseUsed';
+                this.messageService.add({ severity: 'error', summary: 'Suppression impossible', detail: isUsed ? 'Cet exercice est utilisé dans un ou plusieurs entrainements...': 'Une erreur est survenue lors de la suppression.' });
+            
+              }
+            });
+        }
+      });
+    }
+   
   }
+  
   
   handleSelectedElement(event: Exercise) {
     this.selectedExercise = event;

@@ -1,51 +1,36 @@
-
-
-<div *ngIf="loading; else tableContent">
-
-  <p-table [value]="data" [tableStyle]="{ 'min-width': '50rem' }">
-    <ng-template pTemplate="header">
+<p-contextMenu #contm [model]="menuItems"></p-contextMenu> 
+<p-table
+  [value]="data"
+  [(contextMenuSelection)]="selectedItem"
+  [contextMenu]="contm"
+  dataKey="value"
+  [paginator]="paginator"
+  [rows]="pageSize"
+  [totalRecords]="totalCount"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [pageLinks]="5"
+  [lazy]="true"
+  [showPageLinks]="true"
+  [(first)]="currentPage"
+  [lazyLoadOnInit]="false"
+  paginatorPosition="top"
+  (onContextMenuSelect)="getItemValue($event)"
+  (onLazyLoad)="onLazyLoadCall($event)"
+  class="my-2 v-75 {{ tableStyle }} p-datatable-striped"
+> 
+  <ng-template pTemplate="header"> 
+    <tr>
       <th *ngFor="let column of columns" [style.width]="column.width">{{ column.header }}</th>
-    </ng-template>
-    <ng-template pTemplate="body" let-product>
-        <tr>
-            <td><p-skeleton></p-skeleton></td>
-            <td><p-skeleton></p-skeleton></td>
-            <td><p-skeleton></p-skeleton></td>
-            <td><p-skeleton></p-skeleton></td>
-        </tr>
-    </ng-template>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData *ngIf="data && data.length > 0">
+    <tr [pContextMenuRow]="rowData">
+      <td *ngFor="let column of columns" [style.text-align]="column.align" [style.width]="column.width">
+        <span [title]="getTooltip(rowData, column)" *ngIf="!column.export">
+          <span class="ml-3" [innerHTML]="formatData(rowData, column)"></span>
+        </span>
+        <a *ngIf="column.export" (click)="exportColumnValue(rowData, column)">{{ formatData(rowData, column) }}</a>
+      </td>
+    </tr>
+  </ng-template>
 </p-table>
-
-</div>
-
-<ng-template #tableContent>
-  <p-contextMenu #cmm [model]="menuItems"> 
-  </p-contextMenu>  
-  <p-table 
-    [value]="data" 
-    [(contextMenuSelection)]="selectedItem" 
-    [contextMenu]="cmm" 
-    dataKey="value"
-    (contextMenuSelectionChange)="getItemValue($event)"
-    class="my-2  {{tableStyle}} p-datatable-striped">
-    <ng-template pTemplate="header">
-      <tr>
-        <th *ngFor="let column of columns" [style.width]="column.width">{{ column.header }}</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-rowData *ngIf=" !loading && data && data.length > 0">
-      <tr [pContextMenuRow]="rowData">
-        <td *ngFor="let column of columns" [style.text-align]="column.align" [style.width]="column.width">
-          <span [title]="getTooltip(rowData, column)" *ngIf="!column.export">
-            <span class="ml-3" [innerHTML]="formatData(rowData, column)"></span>
-
-          </span>
-          <a *ngIf="column.export" (click)="exportColumnValue(rowData, column)">
-            {{ formatData(rowData, column) }}
-          </a>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-</ng-template>
-

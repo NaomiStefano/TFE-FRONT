@@ -2,13 +2,13 @@
   <div class="container-fluid h-100">
     <div class="row h-100">
       <div class="col-md-3 col-lg-2 h-100 sidebar_container">
-        <i class="material-icons grey-icon mt-3 ml-5" [pTooltip]="'Se déconnecter...'" [tooltipPosition]="'right'" (click)="dataService.disconnect()">exit_to_app</i>
+        <i class="material-icons grey-icon mt-3 ml-5" [pTooltip]="'Se déconnecter...'" [tooltipPosition]="'right'" (click)="logOut()">exit_to_app</i>
         <div class="my-3">
           <div class="d-flex flex-column justify-content-center align-items-end text-center my-4 mx-5 ">
-            <i class="material-icons grey-icon" routerLink="/private/myProfile">edit</i>
+            <i class="material-icons grey-icon "(click)="updateCoach()" [pTooltip]="'Modifier mon profil...'">edit</i>
           </div>
           <div class="d-flex flex-column justify-content-center align-items-center text-white text-center my-2">
-            <i class="material-icons user-icon" (click)="updateCoach()">account_circle</i>
+            <i class="material-icons user-icon" (click)="seeCoachProfile()" [pTooltip]="'Voir le profil...'">account_circle</i>
             <h2 class="mb-0 mt-4">{{dataService.fullName}}</h2>
             <h3 class="pt-0">{{dataService.type}}</h3>
           </div>
@@ -31,6 +31,7 @@
         </div>
       </div>
       <div class=" w-75 h-100 overflow-auto mx-auto text-center">
+        <p-confirmDialog header="Confirmation de déconnexion" acceptLabel="Confirmer" rejectLabel="Annuler"></p-confirmDialog>
         <router-outlet></router-outlet>
       </div>
     </div>

@@ -23,7 +23,8 @@ import { HttpClientModule } from '@angular/common/http';
 import {  DatePipe } from '@angular/common';
 import { ExerciseFormComponent } from './components/private/exercise/exercise-form/exercise-form.component';
 import { SessionFormComponent } from './components/private/session/session-form/session-form.component';
-import { ProfileComponent } from './components/private/profile/profile.component';
+import { DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { MySkeletonComponent } from './components/shared/my-skeleton/my-skeleton.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,7 @@ import { ProfileComponent } from './components/private/profile/profile.component
     SessionFormComponent,
     ExerciseFormComponent,
     MyTableComponent,
-    ProfileComponent,
+    MySkeletonComponent
   ],
   imports: [
     BrowserModule,
@@ -49,13 +50,14 @@ import { ProfileComponent } from './components/private/profile/profile.component
     ReactiveFormsModule,
     PrimengModule,
     AppRoutingModule,
+    DynamicDialogModule,
     BrowserAnimationsModule,
     MatSidenavModule
   ],
   providers: [
     ApiCallService,
     StaminaService,
-    DatePipe,
+    DatePipe
   ],
   bootstrap: [AppComponent],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]

@@ -144,10 +144,21 @@ export class SessionComponent implements OnInit{
       (session:TimeSlot)=>{
         if(session){
           this.api.postTimeslot(session)
-            .subscribe((res:any)=>{
-              this.getIncomingSess();
-              this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Création réussie !' });
-          })
+            .subscribe({
+              next: (res: any) => {
+                 if(res){
+                  this.getIncomingSess();
+                  this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Création réussie !' });
+                }
+              },
+              error: (error: any) => {
+                const overLapping = error.error.toString().trim() === 'overlapping'
+                  this.messageService.add({ 
+                    severity: 'error', 
+                    summary: 'Erreur', 
+                    detail: overLapping ? 'Vous ne pouvez pas prévoir deux séances en même temps..':'Une erreur est survenue...' });
+              }
+            });
         }
       }
     )

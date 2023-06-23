@@ -12,19 +12,31 @@ export class StaminaService {
   public type : string = "";
   public publisherId : number = 0;
   public connected : boolean = false;
+  public coach !: Coach ; 
   constructor(
         private router: Router,
   ) { 
-    this.apiBaseUrl = "http://localhost:7101/api/"
-  }
+    this.apiBaseUrl = "http://localhost:7101/api/"    
+      const storedUser = localStorage.getItem('userConnected');
+      if (storedUser) {
+        const coach = JSON.parse(storedUser);
+        this.fullName = coach.fullName;
+        this.type = "Coach";
+        this.publisherId = coach.id;
+        this.connected = true;
+        this.coach = coach;
+      }
+    }
+    
+  
 
-  setMe(coach:Coach){
-    this.fullName = coach.fullName? coach.fullName : "";
-    this.type = "Coach";
-    this.publisherId = coach.id;
-    this.connected = true;
-    localStorage.setItem('userConnected',coach.id.toString());
-  }
+    setMe(coach: Coach) {
+      this.fullName = coach.fullName ? coach.fullName : "";
+      this.type = "Coach";
+      this.publisherId = coach.id;
+      this.connected = true;
+      localStorage.setItem('userConnected', JSON.stringify(coach));
+    }
 
   disconnect(){
     this.fullName = '';

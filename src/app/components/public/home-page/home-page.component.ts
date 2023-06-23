@@ -31,20 +31,36 @@ export class HomePageComponent implements OnInit{
     
   }
 
-  public checkLogin(){
+  public checkLogin() {
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$/;
     this.messageService.add({ severity: 'info', summary: 'Patience', detail: 'Connexion en cours...' });
-    const loginData: LoginData = { // match type login data
+    const loginData: LoginData = {
       login: this.loginForm.value.login as string,
       password: this.loginForm.value.password as string,
     };
-    this.api.checkLoginCoach(loginData).subscribe((res:any)=>{
-      if(res){
-        this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Connexion réussie !' });
-        var coach = new Coach(res)
-        this.meService.setMe(coach);
-        this.router.navigate(['/private/session']);
+    if(loginData.password)
+      if (passwordRegex.test(loginData.password)) {
+        this.api.checkLoginCoach(loginData).subscribe({
+          next: (res: any) => {
+            if (res) {
+              this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Connexion réussie !' });
+              var coach = new Coach(res);
+              this.meService.setMe(coach);
+              this.router.navigate(['/private/session']);
+            }
+          },
+          error: (error: any) => {
+            console.log(error.error)
+            if(error.error =='Invalid login credentials')
+              this.messageService.add({ severity: 'error', summary: 'Erreur', detail: error.error =='Invalid login credentials' ? 'Informations de connexion erronées...':'Une erreur est survenue...' });
+          }
+        });
+      }else{
+        this.messageService.add({ severity: 'error', summary: 'Erreur', detail:'Informations de connexion erronées...'});
       }
-    })
+
+
   }
+  
   
 }

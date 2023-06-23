@@ -83,6 +83,7 @@ export class WorkoutComponent {
     tooltipEvent: 'hover',
     tooltipPosition: 'right'
   }
+  public loadingExercise : boolean = true;
   constructor(
     private api : ApiCallService,
     private confirmationService: ConfirmationService,
@@ -105,7 +106,8 @@ export class WorkoutComponent {
   public getWorkouts(coach?:any){
     this.workouts = [];
     this.isLoading = true ; 
-    this.api.getAllWorkouts(coach && coach.workoutTitle ? coach.workoutTitle : null ).subscribe(
+    console.log(coach)
+    this.api.getAllWorkouts(coach && coach.value ? coach.value : null ).subscribe(
       (res:any)=>{
         if(res){
           this.workouts = res; 
@@ -120,7 +122,7 @@ export class WorkoutComponent {
   getCoaches(){
     this.api.getAllCoaches().subscribe(
       (res:Array<Coach>)=>{
-        this.coaches = res;
+        this.coaches = res.map(coachData => new Coach(coachData));
       }
     )
   }
@@ -132,11 +134,13 @@ export class WorkoutComponent {
 
   public getAllExercises(event?:any){
     this.exercises = [];
+    this.loadingExercise=true;
     this.api.getAllExercises(null,event? event.value:null).subscribe(
       (res:any)=>{
         if(res){
-          this.exercises = res.sort((a: any, b: any) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
+          this.exercises = res.results.sort((a: any, b: any) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
         }
+        this.loadingExercise=false
     })  
   }
   /**
@@ -329,6 +333,7 @@ export class WorkoutComponent {
 
   
   handleSelectedElement(event: Workout) {
+    console.log(event)
     this.selectedWorkout = event;
     
   }

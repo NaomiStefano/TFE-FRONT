@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MyColumn } from './myColumn';
-import { TableModule } from 'primeng/table';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 
 
 @Component({
@@ -11,14 +10,21 @@ import { MenuItem, MessageService } from 'primeng/api';
 })
 export class MyTableComponent implements OnInit{
 
-  @ViewChild('cmm') contextMenu: any;
-  
+
+  @ViewChild('contm') contextMenu: any;
+
   @Input() data: any[] = [];
   @Input() columns: MyColumn[] = [];
   @Input() tableStyle: string = "";
-  @Input() loading : boolean = true; 
   @Input() menuItems : MenuItem[] = [];
-  @Output() selectedElement: EventEmitter<any> = new EventEmitter<any>();
+  @Input() pageSize : number = 0;
+  @Input() totalCount : number =0; 
+  @Input() showCurrentPage : boolean = false; 
+  @Input() paginator : boolean = false;
+@Output() selectedElement: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onLazyLoad: EventEmitter<number> = new EventEmitter<number>();
+  @Input() currentPage: number = 1; 
+
   selectedItem!: any;
 
 
@@ -27,7 +33,7 @@ export class MyTableComponent implements OnInit{
   
 
   ngOnInit(): void {
-        
+     
   }
 
   getColumnValue(rowData: any, column: MyColumn): string {
@@ -56,6 +62,13 @@ export class MyTableComponent implements OnInit{
   }
 
   getItemValue(event:any){
-    this.selectedElement.emit(event);
+    this.selectedElement.emit(event.data);
   }
+
+  onLazyLoadCall(event: any): void {
+    const pageNumber = event.first / event.rows + 1;
+    this.onLazyLoad.emit(pageNumber);
+    
+  }
+  
 }

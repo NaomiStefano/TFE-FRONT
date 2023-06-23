@@ -1,4 +1,4 @@
-<app-my-title text="Liste des exercices" [buttons]="button"></app-my-title>
+<app-my-title [text]="'Liste des exercices ' + (result.totalCount && result.totalCount !== 0 ? '( '+ result.totalCount +' )': '') "[buttons]="button"></app-my-title>
 
 <div class="mt-5">
     <div class="d-flex justify-content-start mb-3">
@@ -12,14 +12,23 @@
             (onClear)="getExercises()">
         </p-dropdown>
       </div>
-
-    <app-my-table 
-    [data]="exercises"
-    [columns]="columns"
-    [loading]="isLoading"
-    [menuItems]="menuItem"
-    (selectedElement)="handleSelectedElement($event)"
-  ></app-my-table>
+      <div *ngIf="isLoading">
+        <app-my-skeleton [columns]="columns"></app-my-skeleton>
+      </div>
+      <div *ngIf="!isLoading"> 
+          <app-my-table 
+          [data]="exercises"
+          [columns]="columns"
+          [menuItems]="menuItem"
+          [paginator]="true"
+          [showCurrentPage]="true"
+          [currentPage]="result.pageNumber"
+          [pageSize]="result.pageSize"
+          [totalCount]="result.totalCount"
+          (onLazyLoad)="onLazyLoad($event)"
+          (selectedElement)="handleSelectedElement($event)"
+        ></app-my-table>
+      </div>
     <div class="row" *ngIf="!isLoading && exercises.length == 0">
         <div class="col-md-12 mt-3">
             <div class="alert alert-primary d-flex align-items-center justify-content-between">
@@ -27,6 +36,7 @@
             </div>
         </div>
     </div>
+     
     <p-toast position="bottom-right"></p-toast>
     <p-confirmDialog header="Confirmation de suppression" acceptLabel="Confirmer" rejectLabel="Annuler"></p-confirmDialog>
 </div>

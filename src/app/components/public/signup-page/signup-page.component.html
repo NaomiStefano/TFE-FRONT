@@ -1,41 +1,46 @@
-<div class="d-flex flex-column justify-content-center vh-100 parent">
+<div [class]="'d-flex flex-column justify-content-center ' + (profileMode ? '' : 'vh-100') + ' parent'">
     <div class="container_box text-center align-self-center d-flex flex-column justify-content-between">
         <section class=" w-100 align-self-center">
-            <section>
+            <section *ngIf="!profileMode">
                 <img src="assets/img/png/staminaWhite.png" class="container_headTitle mt-2">
                 <h1 class="text-white">ZONE COACH</h1>
             </section>
             <form [formGroup]="signupForm">
                 <div class="row mx-3 ">
                     <div class="col-12 ">
-                        <input pInputText id="lastName" class="w-100 " formControlName="lastName" placeholder="Nom"/>
+                        <input pInputText id="lastName" class="w-100 " formControlName="lastName" placeholder="Nom" [readOnly]="readonlyMode">
                     </div>
                 </div><div class="row mx-3  mt-3">
                     <div class="col-12 ">
-                        <input pInputText id="firstName" class="w-100 " formControlName="firstName" placeholder="Prénom"/>
+                        <input pInputText id="firstName" class="w-100 " formControlName="firstName" placeholder="Prénom" [readOnly]="readonlyMode"/>
                     </div>
                 </div>
                 <div class="row mx-3 mt-3">
                     <div class="col-12 ">
-                        <input pInputText id="login" class="w-100 " formControlName="login" placeholder="Identifiant" />
-                    </div>
-                </div>
-                <div class="row mx-3  mt-3">
-                    <div class="col-12 ">
-                            <p-inputMask formControlName="birthDate"  mask="99/99/9999" slotChar="jj/mm/aaaa" placeholder="Date de naissance" ></p-inputMask>
-                    </div>
-                </div>
-                <div class="row mx-3 mt-3">
-                    <div class="col-12 ">
-                            <p-inputMask mask="0999/99.99.99" formControlName="phoneNumber" placeholder="Numéro de téléphone" ></p-inputMask>
+                        <input pInputText id="login" class="w-100 " formControlName="login" placeholder="Identifiant" [readOnly]="readonlyMode"/>
                     </div>
                 </div>
                 <div class="row mx-3 mt-3">
                     <div class="col-12">
-                        <p-password type="password"  formControlName="password" class="w-full"                                 
+                        <p-calendar #calendar formControlName="birthDate" [showIcon]="true" dateFormat="dd/mm/yy" appendTo="body" [required]="true" placeholder="Date de naissance" [disabled]="readonlyMode" class="w-100"></p-calendar>
+                    </div>
+                </div>                
+                <div class="row mx-3 mt-3">
+                    <div class="col-12 ">
+                            <p-inputMask mask="0999/99.99.99" formControlName="phoneNumber" placeholder="Numéro de téléphone" [readOnly]="readonlyMode"></p-inputMask>
+                    </div>
+                </div>
+                <div class="row mx-3 mt-3" *ngIf="!profileMode">
+                    <div class="col-12">
+                        <p-password type="password"  
+                        formControlName="password" class="w-full"                                 
                             styleClass="p-password p-component p-inputwrapper p-input-icon-right" [style]="{'width':'100%'}"
-                            [inputStyle]="{'width':'100%'}" [toggleMask]="true" placeholder="Mot de passe"
-                            strongRegex="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$" strongLabel="Format requis atteint !" mediumLabel=" " weakLabel=" " promptLabel=" ">
+                            [inputStyle]="{'width':'100%'}" 
+                            [toggleMask]="true" placeholder="Mot de passe"
+                            strongRegex="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$" 
+                            strongLabel="Format requis atteint !" 
+                            mediumLabel=" " weakLabel=" " promptLabel=" " 
+                            (onFocus)="checkPasswordMatch()">
                             <ng-template pTemplate="footer">
                                 <ul class="pl-2 mt-0" style="line-height: 1.5">
                                     <li>Au moins 1 lettre majuscule</li>
@@ -48,28 +53,38 @@
                         </p-password>
                     </div>
                 </div>  
-                <div class="row mx-3 mt-3">
+                <div class="row mx-3 mt-3" *ngIf="!profileMode">
                     <div class="col-12">
-                        <p-password type="password"  formControlName="confirmPass" class="w-full" [feedback]="false"                                 
+                        <p-password 
+                        type="password"  
+                        formControlName="confirmPass" 
+                        class="w-full" [feedback]="false"                                 
                         styleClass="p-password p-component p-inputwrapper p-input-icon-right" [style]="{'width':'100%'}"
-                            [inputStyle]="{'width':'100%'}" [toggleMask]="true" placeholder="Répéter le mot de passe"
-                            required (onFocus)="checkPasswordMatch()"> 
+                        [inputStyle]="{'width':'100%'}" 
+                        [toggleMask]="true" 
+                        placeholder="Répéter le mot de passe"
+                        required (onFocus)="checkPasswordMatch()"> 
                         </p-password>
                     </div>
                 </div>  
-                 <div class="row mx-3 mt-3">
+                 <div class="row mx-3 mt-3" *ngIf="!client">
                     <div class="col-12">
-                        <p-checkbox formControlName="needAccessGym" [binary]="true" inputId="gymButton"></p-checkbox>
-                        <label class="text-white ml-2" for="gymButton">Je souhaite un accès à la salle de sport.</label>
+                        <p-checkbox formControlName="needAccessGym" [binary]="true" inputId="gymButton" [readOnly]="readonlyMode"></p-checkbox>
+                        <label [class]="profileMode? 'ml-4':'text-white ml-2'" for="gymButton">Je souhaite un accès à la salle de sport.</label>
                     </div>
                 </div>
             </form>
         </section>
-        <p-toast position="bottom-right"></p-toast>
-        <section class="row mx-2 mt-4 mb-4">
+        <p-toast position="bottom-right" *ngIf="!profileMode"></p-toast>
+        <section class="row mx-2 mt-4 mb-4" *ngIf="!profileMode">
             <div class="col-12">
                 <p-button label="S'INSCRIRE" [disabled]="signupForm.invalid" class="row mx-2 my-2" (click)="signupForm.valid ? signup() : null "></p-button>
                 <p-button label="RETOUR"   routerLink="/public/home" routerLinkActive="active" class="row mx-2 mt-4"></p-button>
+            </div>
+        </section>
+        <section class="row mx-2" *ngIf="profileMode && !readonlyMode">
+            <div class="col-12">
+                <p-button label="MODIFIER" [disabled]="signupForm.invalid" class="row mx-2 my-2" (click)="signupForm.valid ? (client ? updateClient() :updateMe()) : null "></p-button>
             </div>
         </section>
     </div>

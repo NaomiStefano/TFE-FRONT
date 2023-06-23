@@ -1,10 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { Exercise } from '../models/exercise';
 import { TimeSlot } from '../models/timeslot';
 import { Coach } from '../models/Coach';
 import { LoginData } from '../models/loginData';
+import { Client } from '../models/client';
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +19,12 @@ export class ApiCallService {
 
   // ME 
 
-  public checkLoginCoach(data:LoginData):Observable<any>{
+  public checkLoginCoach(data: LoginData) {
     data.type = "Coach";
-    return this.http.post<any[]>(`${this.baseUrl}Me`,data);}
-
+    return this.http.post<any[]>(`${this.baseUrl}Me`, data)};
+  
+  
+ 
   // COACH
 
   public getAllCoaches(): Observable<any>{
@@ -30,7 +33,10 @@ export class ApiCallService {
 
   public postCoach(data:Coach):Observable<any>{
     return this.http.post<any[]>(`${this.baseUrl}Coaches`,data);}
-
+    
+  public updateCoach(coachId:number,coach:Coach):Observable<any>{
+      return this.http.put<any[]>(`${this.baseUrl}Coaches/${coachId}`,coach);}
+  
 
 
 
@@ -38,16 +44,21 @@ export class ApiCallService {
   public getAllExerciseTypes() :Observable<any>{
       return this.http.get<any>(`${this.baseUrl}Exercises/types`);
   }
-  public postExercise(data:Exercise):Observable<any>{
+  public postExercise(data:Exercise){
     return this.http.post<any[]>(`${this.baseUrl}Exercises`,data);}
   
-  public getAllExercises(coachId?: number|null, exerciseTypeId?:number|null): Observable<any> {
+  public getAllExercises(coachId?: number|null, exerciseTypeId?:number|null, pageSize?:number|null, pageNumber?:number|null): Observable<any> {
     let params = new HttpParams();
       if (coachId ) {
         params = params.set('publisherId', coachId);
       }
       if(exerciseTypeId){
         params = params.set('exerciseTypeId',exerciseTypeId);
+      }
+      if(pageNumber && pageSize){
+        params = params.set('pageNumber',pageNumber);
+        params = params.set('pageSize',pageSize);
+
       }
       return this.http.get<any>(`${this.baseUrl}Exercises`, { params });
     }
@@ -71,7 +82,7 @@ export class ApiCallService {
     return this.http.get<any>(`${this.baseUrl}Timeslots/past`);
   }
 
-  public postTimeslot(data:TimeSlot):Observable<any>{
+  public postTimeslot(data:TimeSlot){
     return this.http.post<any[]>(`${this.baseUrl}Timeslots`,data);}
     
   public updateTimeslot(timeslotId : number, exercise:Exercise){
@@ -84,7 +95,7 @@ export class ApiCallService {
 
     // WORKOUTSS
 
-    public getAllWorkouts(coachId?:string): Observable<any>{
+    public getAllWorkouts(coachId?:number): Observable<any>{
       let params = new HttpParams();
       if (coachId) {
         params = params.set('publisherId', coachId);
@@ -106,5 +117,7 @@ export class ApiCallService {
       
     public deleteClient(clientId: number){
       return this.http.delete<any[]>(`${this.baseUrl}Clients/${clientId}`);}
-    
+
+      public updateBaseClient(clientId:number,client:Client):Observable<any>{
+        return this.http.put<any[]>(`${this.baseUrl}Clients/${clientId}/General`,client);}
 }

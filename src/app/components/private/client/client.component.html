@@ -1,32 +1,39 @@
 
 <div *ngIf="clientsMode ; else userMode">
     <app-my-title text="Liste des coachés" ></app-my-title>
-    <div class="mt-5">
-        <app-my-table 
-            [data]="clients" 
-            [columns]="columns" 
-            [loading]="isLoading"
-            [menuItems]="menuItem"
-            (selectedElement)="handleSelectedElement($event)"
-            ></app-my-table>
-            <p-toast position="bottom-right"></p-toast>
-            <p-confirmDialog header="Confirmation de suppression" acceptLabel="Confirmer" rejectLabel="Annuler"></p-confirmDialog>
-        <div class="row" *ngIf="!isLoading && clients.length == 0">
-            <div class="col-md-12 mt-3">
-                <div class="alert alert-primary d-flex align-items-center justify-content-between">
-                    Aucun client enregistré pour l'instant.
+    <div *ngIf="isLoading ; else loaded" class="mt-5">
+        <app-my-skeleton [columns]="columns"></app-my-skeleton>
+      </div>
+    <ng-template  #loaded>
+        <div class="mt-5">
+            <app-my-table 
+                [data]="clients" 
+                [columns]="columns" 
+                [loading]="isLoading"
+                [menuItems]="menuItem"
+                (selectedElement)="handleSelectedElement($event)"
+                ></app-my-table>
+                <p-toast position="bottom-right"></p-toast>
+                <p-confirmDialog header="Confirmation de suppression" acceptLabel="Confirmer" rejectLabel="Annuler"></p-confirmDialog>
+            <div class="row" *ngIf="!isLoading && clients.length == 0">
+                <div class="col-md-12 mt-3">
+                    <div class="alert alert-primary d-flex align-items-center justify-content-between">
+                        Aucun client enregistré pour l'instant.
+                    </div>
                 </div>
             </div>
         </div>
-
-    </div>
+    </ng-template>
 </div>
 <ng-template #userMode>
     <app-my-title [text]="selectedClient.fullName" [showReturn]="true" (iconClick)="backToList()" [buttons]="buttons"></app-my-title>
     <section class="profile-section">
         <div class="row mt-4">
-            <div class="col-12">
-                <h3 class="fw-bold text-start">INFORMATIONS PERSONNELLES</h3>
+            <div class="col-3">
+                <h3 class="fw-bold text-start">INFORMATIONS PERSONNELLES</h3> 
+            </div>
+            <div class="col-1">
+                <i class="material-icons grey-icon" (click)="updateClientGeneral(selectedClient)" >edit</i>
             </div>
         </div>
         <div class="row"> 

@@ -1,3 +1,7 @@
 .close{
     top:-8px;
 }
+
+:host ::ng-deep .p-calendar{
+    width:25rem;
+}

@@ -24,7 +24,7 @@ export class ExerciseFormComponent implements OnInit{
   public loading : boolean = true; 
   public types: Array<ExerciseType> = [];
   public exerciseIds: Array<number>|number = [];
-
+  public readonly : boolean = false;
   constructor(
     private api : ApiCallService,
     public ref: DynamicDialogRef,
@@ -41,7 +41,8 @@ export class ExerciseFormComponent implements OnInit{
   private initData(){
     if(this.dialogConfig.data){
       this.updateMode = true;
-      this.exerciseToUpdate = this.dialogConfig.data;
+      this.exerciseToUpdate = this.dialogConfig.data.exercise;
+      this.readonly = this.dialogConfig.data.read
       this.exerciseIds = this.exerciseToUpdate.exerciseTypes.map((type: ExerciseType)=>type.id)
     }
 
