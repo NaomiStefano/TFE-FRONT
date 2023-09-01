@@ -1,0 +1,73 @@
+
+
+<app-my-title [text]="mainTitle" [showReturn]="true" [buttons]="button" (iconClick)="goBackToClient()"></app-my-title>
+<section class="d-flex align-items-center w-100 mt-2 mx-auto ">
+    <div *ngIf="program  && !isLoading " class="w-100">
+
+        <div class="row mt-1">
+            <div class="d-flex align-items-center justify-content-end  mb-2 w-100 ">
+                <h2 class="me-4 pb-0 mb-0">Programmation :</h2>
+                <input type="text" placeholder="Nom de la programmation" class="w-25" pInputText [(ngModel)]="program.title" />
+            </div>
+        </div>
+
+        <div class="buttons__container d-flex align-items-center justify-content-center mb-2">
+            <div *ngFor="let session of program.sessions" class="d-flex align-items-center mr-2">
+              <p-button label="Séance {{session.numOrder}}" styleClass="px-5" [class.isInactive]="session.numOrder != activeSessionNumber" (onClick)="setActiveSession(session.numOrder)"></p-button>
+              <i class="bi bi-dash-square session-remove-button" *ngIf="creationMode && program.numberOfSessions > 1" (click)="removeSession(session.numOrder)"></i>
+            </div>
+            <i class="bi bi-plus-square-fill" *ngIf="creationMode && program.numberOfSessions < 7" (click)="addSession()"></i>
+        </div>         
+        {{currentSession|json}}
+        <section *ngIf="creationMode && currentSession" class="mt-4">
+            <div class="row">
+                <div class="col-5">
+                    <div class="d-flex justify-content-start align-items-end w-100">
+                        <h2 class="me-4 pb-0 mb-0">Entraînement :</h2>
+                        <p-dropdown *ngIf="!isLoading" [options]="workouts"  placeholder="Sélectionner un entrainement" (onChange)="selectWorkout($event)" optionLabel="title" optionValue="id" [showClear]="false"></p-dropdown>
+                    </div>
+                </div>
+                <div class="col-5">
+                    <div class="d-flex align-items-center">
+                        <h2 class="me-4 pb-0 mb-0">Titre :</h2>
+                        <input type="text" placeholder="Titre de la séance" class="w-50" pInputText [(ngModel)]="currentSession.title" />
+                    </div>
+                </div>
+        
+                <div class="col-2">
+                    <p-checkbox  [binary]="true" inputId="testingMax" class="pb-0" [(ngModel)]="currentSession.testingMax" ></p-checkbox>
+                    <label class="ms-4 pb0" for="testingMax">Séance maxReps</label>
+                </div>
+            </div>
+
+            <div class="row mt-4" *ngIf="currentSession.workoutId && steps">
+                <p-steps [model]="steps" [(activeIndex)]="activeStep" [readonly]="false" ></p-steps>
+           
+                <ng-container *ngFor="let exercise of workoutExercises | filterByType:+steps[activeStep].id" class="mt-2" >
+                    <div class="d-flex align-items-start">
+                        <h2 class="me-4 pb-0 mb-0">{{exercise.title}}</h2>
+                        <hr class="separator-horizontal">
+                        <h3>Nombre de séries : </h3>
+                    </div>
+                    {{exercise|json}}
+                </ng-container>
+            </div>
+        </section>
+
+        <section *ngIf="currentSession && !creationMode">
+            <h2 class="d-flex justify-content-start">{{currentSession.title}} - {{currentSession.isMade ? ( currentSession.performanceDate | date:'dd/mm/yyyy' ) : 'A réaliser'}}</h2>
+            <app-my-table id="215"
+                [data]="currentSession.sessionDetails" 
+                [columns]="columns" 
+                [loading]="isLoading"
+                >
+            </app-my-table>
+            <p-toast position="bottom-right"></p-toast>
+            <p-confirmDialog header="Confirmation de suppression" acceptLabel="Confirmer" rejectLabel="Annuler"></p-confirmDialog>
+        </section>     
+    </div>
+
+    <div *ngIf="isLoading" class="w-100 mt-2">
+        <app-my-skeleton [columns]="columns"></app-my-skeleton>
+    </div>
+</section>

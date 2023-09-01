@@ -118,6 +118,16 @@ export class ApiCallService {
     public deleteClient(clientId: number){
       return this.http.delete<any[]>(`${this.baseUrl}Clients/${clientId}`);}
 
-      public updateBaseClient(clientId:number,client:Client):Observable<any>{
-        return this.http.put<any[]>(`${this.baseUrl}Clients/${clientId}/General`,client);}
+    public updateBaseClient(clientId:number,client:Client):Observable<any>{
+      return this.http.put<any[]>(`${this.baseUrl}Clients/${clientId}/General`,client);}
+    
+      /// PROGRAMS 
+
+      public getClientCurrentProgram(clientId: number){
+        return this.http.get<any>(`${this.baseUrl}Programs/${clientId}/current`);
+      }
+
+      public getProgramHistory(clientId:number){
+        return this.http.get<any>(`${this.baseUrl}Programs/${clientId}/previous`);
+      }
 }

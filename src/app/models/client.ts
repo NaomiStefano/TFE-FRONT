@@ -15,7 +15,7 @@ export class Client {
   profession?: string;
   medicalHistory?: string;
   physicalActivity?: string;
-  numSessions?: number;
+  numSessions: number =3;
   hasKids?: boolean;
   maritalStatus?: string;
   initialMu?: string;

@@ -13,7 +13,7 @@ export class MyTableComponent implements OnInit{
 
   @ViewChild('contm') contextMenu: any;
 
-  @Input() data: any[] = [];
+  @Input() data: any = [];
   @Input() columns: MyColumn[] = [];
   @Input() tableStyle: string = "";
   @Input() menuItems : MenuItem[] = [];
@@ -21,7 +21,7 @@ export class MyTableComponent implements OnInit{
   @Input() totalCount : number =0; 
   @Input() showCurrentPage : boolean = false; 
   @Input() paginator : boolean = false;
-@Output() selectedElement: EventEmitter<any> = new EventEmitter<any>();
+  @Output() selectedElement: EventEmitter<any> = new EventEmitter<any>();
   @Output() onLazyLoad: EventEmitter<number> = new EventEmitter<number>();
   @Input() currentPage: number = 1; 
 
@@ -47,11 +47,6 @@ export class MyTableComponent implements OnInit{
     return '';
   }
 
-  exportColumnValue(rowData: any, column: MyColumn): void {
-    if (column.export) {
-      column.export(rowData[column.field], rowData);
-    }
-  }
 
   formatData(rowData: any, column: MyColumn): string {
     const value = this.getColumnValue(rowData, column);

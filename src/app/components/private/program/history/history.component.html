@@ -1,0 +1,20 @@
+
+<app-my-title [text]="'Programmation de '+client.fullName" [showReturn]="true" (iconClick)="goBackToProgram()"></app-my-title>
+<div *ngIf="isLoading" class="mt-5">
+    <app-my-skeleton [columns]="columns"></app-my-skeleton>
+</div>
+<div *ngIf="!isLoading && programs.length>0" class="mt-5">
+    <app-my-table id="215"
+    [data]="programs" 
+    [columns]="columns" 
+    ></app-my-table>
+    <p-toast position="bottom-right"></p-toast>
+    <p-confirmDialog header="Confirmation de suppression" acceptLabel="Confirmer" rejectLabel="Annuler"></p-confirmDialog>
+</div>
+<div class="row" *ngIf="!isLoading && programs.length == 0">
+    <div class="col-md-12 mt-3">
+        <div class="alert alert-primary d-flex align-items-center justify-content-between">
+            Aucune programmation terminée ... pour l'instant. 
+        </div>
+    </div>
+</div>

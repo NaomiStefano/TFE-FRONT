@@ -20,6 +20,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { SkeletonModule } from 'primeng/skeleton';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import {CalendarModule} from 'primeng/calendar';
 import {FileUploadModule} from 'primeng/fileupload';
 import {MenuModule} from 'primeng/menu';
@@ -61,6 +62,8 @@ import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { StepsModule } from 'primeng/steps';
+
 
 @NgModule({
   declarations: [
@@ -93,6 +96,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 	EditorModule,
 	CheckboxModule,
 	ToggleButtonModule,
+	ConfirmPopupModule,
 	ListboxModule,
 	SidebarModule,
 	SelectButtonModule,
@@ -119,7 +123,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 	BadgeModule,
 	ProgressSpinnerModule,
 	SkeletonModule,
-	InputNumberModule
+	InputNumberModule,
+	StepsModule
   ],
   exports : [
 	TableModule,
@@ -136,6 +141,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 	ConfirmDialogModule,
 	CalendarModule,
 	MenuModule,
+	ConfirmPopupModule,
 	FileUploadModule,
 	PasswordModule,
 	PanelModule,
@@ -174,7 +180,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 	BadgeModule,
 	ProgressSpinnerModule,
 	SkeletonModule,
-	InputNumberModule
+	InputNumberModule,
+	StepsModule
 
   ],
   providers: [

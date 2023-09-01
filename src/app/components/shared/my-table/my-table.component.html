@@ -29,7 +29,7 @@
         <span [title]="getTooltip(rowData, column)" *ngIf="!column.export">
           <span class="ml-3" [innerHTML]="formatData(rowData, column)"></span>
         </span>
-        <a *ngIf="column.export" (click)="exportColumnValue(rowData, column)">{{ formatData(rowData, column) }}</a>
+        <!-- <a *ngIf="column.export" (click)="exportColumnValue(rowData, column)">{{ formatData(rowData, column) }}</a> -->
       </td>
     </tr>
   </ng-template>

@@ -25,6 +25,9 @@ import { ExerciseFormComponent } from './components/private/exercise/exercise-fo
 import { SessionFormComponent } from './components/private/session/session-form/session-form.component';
 import { DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MySkeletonComponent } from './components/shared/my-skeleton/my-skeleton.component';
+import { ProgramComponent } from './components/private/program/program.component';
+import { HistoryComponent } from './components/private/program/history/history.component';
+import { FilterByTypePipe } from './_pipes/filter-by-type.pipe';
 
 @NgModule({
   declarations: [
@@ -41,7 +44,10 @@ import { MySkeletonComponent } from './components/shared/my-skeleton/my-skeleton
     SessionFormComponent,
     ExerciseFormComponent,
     MyTableComponent,
-    MySkeletonComponent
+    MySkeletonComponent,
+    ProgramComponent,
+    HistoryComponent,
+    FilterByTypePipe,
   ],
   imports: [
     BrowserModule,
@@ -52,6 +58,7 @@ import { MySkeletonComponent } from './components/shared/my-skeleton/my-skeleton
     AppRoutingModule,
     DynamicDialogModule,
     BrowserAnimationsModule,
+    BrowserModule,
     MatSidenavModule
   ],
   providers: [

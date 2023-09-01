@@ -14,6 +14,7 @@ import { SignupPageComponent } from '../public/signup-page/signup-page.component
 export class PrivateComponent {
 
   public profileMode !: boolean;
+
   constructor(
     public dataService : StaminaService,
     private api : ApiCallService,
@@ -23,13 +24,10 @@ export class PrivateComponent {
     ){
     }
 
-  
-    logOut() {
-      this.askConfirmation();
-  
-    }
-    askConfirmation(){
+
+    askConfirmation(event:any){
       this.confirmationService.confirm({
+        key: "disconnection",
         message: 'Êtes-vous sûr de vouloir vous déconnecter ?',
         header: 'Confirmation de déconnexion',
         acceptLabel: 'Confirmer',

@@ -7,17 +7,6 @@
         font-size: 15px !important;
     }
 }
-.buttons{
-    &__container{
-         display: flex;
-         align-items: center;
-         letter-spacing: 1.5px;
-         & :not(:last-child){
-              margin-right: 1rem;
-         }
-    }
-}
-
 
 /* ---------------------------------------- */
 
@@ -36,9 +25,7 @@
     padding-bottom: 15px;;
 }
 
-.super-compos-sectionseparator-horizontal {
-    border-bottom: 1px solid var(--grey-darker) !important;
-}
+n
 
 fa-icon{
     margin-right: 25px;
@@ -49,3 +36,24 @@ fa-icon{
     font-size: 18px;
     margin-right: 20px;
 }
+
+@media only screen and (max-width: 480px) {
+    .header-container {
+       display: block !important;
+    }
+
+    .buttons__container{
+        display: block !important;
+        margin-right: 0px !important;
+        :not(:last-child) {
+            margin-right: 0px !important;
+        }
+        .myButton{
+            width:100% !important;
+            margin-bottom: 5px !important;
+            margin-right:0px !important;
+            margin-left: 0px !important;
+        }
+    }
+    
+ }

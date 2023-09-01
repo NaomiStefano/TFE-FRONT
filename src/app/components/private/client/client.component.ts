@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { MyButton } from 'src/app/models/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SignupPageComponent } from '../../public/signup-page/signup-page.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-client',
@@ -47,29 +48,36 @@ export class ClientComponent {
       }
     }
   ]
-  public selectedClient !: Client ;
+  public selectedClient !: Client |null  ;
   public buttons : MyButton[] = [
     {
       text : 'Supprimer le coaché',
       click:() => this.deleteClient(this.selectedClient)
     },
-    // {
-    //   text : '  Programmations  ',
-    //   click:() => alert("prooogra")
-    // }
+    {
+      text : '  Programmations  ',
+      click:() => this.goToPrograms()      
+    }
     
   ];
   public menuItem : MenuItem[] = [  
     { 
       label: 'Voir le profil...',  
       icon: 'pi pi-fw pi-search', 
-      command: () => this.getClientDetails(this.selectedClient)
+      command: () =>this.getClientDetails(this.selectedClient)
     },
     { 
       label: 'Supprimer', 
       icon: 'pi pi-fw pi-times', 
       command: () => this.deleteClient(this.selectedClient) 
-    }
+    }, 
+    { 
+      label: 'Programmations',  
+      icon: 'pi pi-fw pi-shield',
+      command: () =>  this.goToPrograms()
+
+
+    },
   ]
   public clientsMode : boolean = true ; // Am i watching the clients list ? 
   constructor(
@@ -78,15 +86,24 @@ export class ClientComponent {
     private confirmationService: ConfirmationService,
     private dialogService : DialogService,
     private messageService: MessageService,
+    private router : Router
   ){
 
   }
 
   ngOnInit(): void {
-  
-
-    this.getClients();
-
+    try {
+        const selectedClient = sessionStorage.getItem('client');
+        if(selectedClient){
+          this.selectedClient = new Client(JSON.parse(selectedClient));
+          this.clientsMode = false;
+        }else{
+          this.clientsMode = true;
+          this.getClients();
+        }
+    } catch (error) {
+      this.messageService.add({ severity: 'error', summary: 'Erreur', detail: `${error}` });
+    }
   }
  
   /**
@@ -107,17 +124,22 @@ export class ClientComponent {
    * Get details of a client
    */
 
-  private getClientDetails(client:Client){
-    this.clientsMode = false;
-    // client.hasDistancial == false ? this.buttons.splice(1,1):null;
+    private getClientDetails(client:Client|null){
+      if(client){
+        this.clientsMode = false;
+         client.hasDistancial == false ? this.buttons.splice(1,1):null;
+      }else{
+        this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Une erreur est survenue lors de la récupération du client ! ' });
+        this.selectedClient = null;
+      }
   }
   /**
    * Update a client
    */
 
   public updateClientGeneral(client:Client){
-    localStorage.setItem('profile','true');
-    localStorage.setItem('client',JSON.stringify(client))
+    sessionStorage.setItem('profile','true')
+    sessionStorage.setItem('client',JSON.stringify(client))
     this.dialogService.open(SignupPageComponent,{
       header:"Modifier le profil du coaché ",
       width: "40%"
@@ -128,20 +150,36 @@ export class ClientComponent {
    * Delete a client 
    */
 
-  private deleteClient(client:Client){
-    this.confirmationService.confirm({
-      message: `Êtes-vous sûr de vouloir supprimer  ${client.lastName} ${client.firstName} ?`,
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.api.deleteClient(client.id).subscribe((res)=>{
-          this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Suppression réussie !' });
-          this.getClients();
-        })
-      }
-  });
+  private deleteClient(client:Client|null){
+    if(client){
+      this.confirmationService.confirm({
+        message: `Êtes-vous sûr de vouloir supprimer  ${client.lastName} ${client.firstName} ?`,
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          this.api.deleteClient(client.id).subscribe((res)=>{
+            this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Suppression réussie !' });
+            this.getClients();
+          })
+        }
+      });
+    }else{
+      this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Une erreur est survenue lors de la récupération du client à supprimer !' });
+    }
   }
 
-  
+  /**
+   * Go To programmation menu
+   * @param event 
+   */
+
+    goToPrograms(){
+      if(this.selectedClient?.hasDistancial){
+        sessionStorage.setItem('client',JSON.stringify(this.selectedClient))
+        this.router.navigate([`/private/program`])
+      }else{
+        this.messageService.add({ severity: 'info', summary: 'Attention', detail: 'Ce coaché ne participe pas aux coachings à distance ! ' });
+      }
+    }
   
   handleSelectedElement(event: Client) {
     console.log(event)
@@ -150,19 +188,10 @@ export class ClientComponent {
   }
 
   public backToList(){
+    this.selectedClient= null;
     this.clientsMode = true;
-    this.buttons = [];
-    this.buttons = [
-      {
-        text : 'Supprimer le coaché',
-        click:() => this.deleteClient(this.selectedClient)
-      },
-      // {
-      //   text : '  Programmations  ',
-      //   click:() => alert("prooogra")
-      // }
-      
-    ];
+    sessionStorage.removeItem('client');
+    this.getClients();
   }
 }
 

@@ -9,6 +9,8 @@ import { ClientComponent } from './components/private/client/client.component';
 import { ExerciseComponent } from './components/private/exercise/exercise.component';
 import { WorkoutComponent } from './components/private/workout/workout.component';
 import { authGuard } from './services/AuthGuard.service';
+import { ProgramComponent } from './components/private/program/program.component';
+import { HistoryComponent } from './components/private/program/history/history.component';
 
 const routes: Routes = [
   {
@@ -45,6 +47,14 @@ const routes: Routes = [
       {
         path:'workout',
         component:WorkoutComponent
+      },
+      {
+        path: 'program',
+        component: ProgramComponent,
+      },
+      {
+        path: 'program-history',
+        component: HistoryComponent
       }
     ]
   },
